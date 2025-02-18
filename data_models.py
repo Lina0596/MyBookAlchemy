@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, String, Date, Column, ForeignKey
 
 
 db = SQLAlchemy()
@@ -8,10 +7,12 @@ db = SQLAlchemy()
 class Author(db.Model):
     __tablename__ = 'authors'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
-    birth_date = Column(Date)
-    date_of_death = Column(Date)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String)
+    birth_date = db.Column(db.Date)
+    date_of_death = db.Column(db.Date, nullable=True)
+
+    books = db.relationship('Book', backref='author', lazy=True)
 
     def __repr__(self):
         return f"Author(id = {self.id}, name = {self.name}, birth date = {self.birth_date}, date of death = {self.date_of_death})"
@@ -20,11 +21,11 @@ class Author(db.Model):
 class Book(db.Model):
     __tablename__ = 'books'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    isbn = Column(Integer)
-    title = Column(String)
-    publication_year = Column(Date)
-    author_id = Column(ForeignKey("authors.id"))
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    isbn = db.Column(db.Integer)
+    title = db.Column(db.String)
+    publication_year = db.Column(db.Integer)
+    author_id = db.Column(db.ForeignKey("authors.id"))
 
     def __repr__(self):
-        return f"Book(id = {self.id}, isbn = {self.isbn}, title = {self.title}, publication year = {self.publication_year}, author id = {self.author_id})"
+        return f"Book(id = {self.id}, isbn = {self.isbn}, title = {self.title}, publication year = {self.publication_year}, author id = {self.author_id}, book cover = {self.book_cover})"

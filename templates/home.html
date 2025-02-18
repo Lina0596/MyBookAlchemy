@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>My Library</h1>
+    <div class="add">
+        <a href="{{ url_for('add_book') }}">+ add a new book</a>
+        <a href="{{ url_for('add_author') }}">+ add a new author</a>
+    </div>
+    {% for book in books %}
+    <div class="book">
+        <img src="{{ book.cover_url }}" alt="Book Cover" width="100">
+        <h2>{{ book.title }}</h2>
+        <p>{{ book.isbn }}</p>
+        <p>{{ book.publication_year }}</p>
+        <p>{{ book.author.name }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add author</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="overlay">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <h2>Add a new author to the database</h2>
+    <div class="form_box">
+        <form method="POST" action="/add_author">
+            <label for="name">Author</label><br>
+            <input type="text" id="name" name="name"><br>
+            <label for="birthdate">Birthdate</label><br>
+            <input type="text" id="birthdate" name="birthdate"><br>
+            <label for="date of death">Date of death</label><br>
+            <input type="text" id="date of death" name="date of death"><br>
+            <input class="submit_button" type="submit" value="Add to database">
+        </form>
+    </div>
+</body>
+</html>

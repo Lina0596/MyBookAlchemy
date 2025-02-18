@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add book</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="overlay">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <h2>Add a new author to the database</h2>
+    <div class="form_box">
+        <form method="POST" action="/add_book">
+            <label for="isbn">ISBN</label><br>
+            <input type="text" id="isbn" name="isbn"><br>
+            <label for="title">Title</label><br>
+            <input type="text" id="title" name="title"><br>
+            <label for="publication year">Publication year</label><br>
+            <input type="text" id="publication year" name="publication year"><br>
+            <label for="author">Select Author:</label>
+            <select name="author" id="author" required>
+                <option value="">-- Select an Author --</option>
+                {% for author in authors %}
+                    <option value="{{ author.id }}">{{ author.name }}</option>
+                {% endfor %}
+            </select>
+            <input class="submit_button" type="submit" value="Add to database">
+        </form>
+    </div>
+</body>
+</html>
