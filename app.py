@@ -25,12 +25,21 @@ def get_book_cover(isbn):
     return None
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
-    books = Book.query.all()
+    sort_by = request.args.get("sort_by", "title")  # Default sorting by title
+    if sort_by == "author":
+        books = Book.query.join(Author).order_by(Author.name).all()
+    else:
+        books = Book.query.order_by(Book.title).all()
+
+    search = request.args.get("search")
+    if search:
+        books = Book.query.filter(Book.title.like(f"{search}%")).all()
+
     for book in books:
         book.cover_url = get_book_cover(book.isbn)
-    return render_template("home.html", books=books)
+    return render_template("home.html", books=books, sort_by=sort_by, search=search)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
@@ -41,10 +50,13 @@ def add_author():
             birth_date=datetime.strptime(request.form["birthdate"], "%Y-%m-%d").date(),
             date_of_death=datetime.strptime(request.form["date of death"], "%Y-%m-%d").date() if request.form["date of death"] else None,
         )
+
         db.session.add(author)
         db.session.commit()
+
         flash(f"Author '{request.form["name"]}' added successfully to the database", "success")
         return redirect(url_for("add_author"))
+
     return render_template("add_author.html")
 
 
@@ -57,12 +69,32 @@ def add_book():
             publication_year=int(datetime.strptime(request.form["publication year"], "%Y").year),
             author_id=request.form["author"]
         )
+
         db.session.add(book)
         db.session.commit()
+
         flash(f"Book '{request.form["title"]}' added successfully to the database", "success")
         return redirect(url_for("add_book"))
+
     authors = Author.query.all()
     return render_template('add_book.html', authors=authors)
+
+
+@app.route('/book/<int:book_id>/delete', methods=['GET'])
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    author = book.author
+
+    db.session.delete(book)
+
+    other_books = Book.query.filter_by(author_id=author.id).count()
+    if other_books == 0:
+        db.session.delete(author)
+
+    db.session.commit()
+
+    flash(f'Book "{book.title}" was successfully deleted!', 'success')
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":

@@ -1,25 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Library</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <h1>My Library</h1>
+
+    <form method="GET" action="{{ url_for('home') }}">
+        <label for="sort">Sort by:</label>
+        <select name="sort_by" id="sort" onchange="this.form.submit()">
+            <option value="title" {{ "selected" if sort_by == 'title' else "" }}>Title</option>
+            <option value="author" {{ "selected" if sort_by == 'author' else "" }}>Author</option>
+        </select>
+    </form>
+
+    <form method="GET" action="{{ url_for('home') }}">
+        <label for="search">Search for a book:</label>
+        <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Enter title or author">
+        <button type="submit">Search</button>
+    </form>
+
     <div class="add">
         <a href="{{ url_for('add_book') }}">+ add a new book</a>
         <a href="{{ url_for('add_author') }}">+ add a new author</a>
     </div>
-    {% for book in books %}
-    <div class="book">
-        <img src="{{ book.cover_url }}" alt="Book Cover" width="100">
-        <h2>{{ book.title }}</h2>
-        <p>{{ book.isbn }}</p>
-        <p>{{ book.publication_year }}</p>
-        <p>{{ book.author.name }}</p>
-    </div>
-    {% endfor %}
+    {% if books %}
+        {% for book in books %}
+        <div class="book">
+            <img src="{{ book.cover_url }}" alt="Book Cover" width="100">
+            <h2>{{ book.title }}</h2>
+            <p>{{ book.isbn }}</p>
+            <p>{{ book.publication_year }}</p>
+            <p>{{ book.author.name }}</p>
+            <div class="delete">
+                <form method="GET" action="{{ url_for('delete_book', book_id=book.id) }}">
+                    <button type="submit">delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No matching books found.</p>
+    {% endif %}
+
 </body>
 </html>
