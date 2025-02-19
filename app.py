@@ -93,7 +93,6 @@ def delete_book(book_id):
 
     db.session.commit()
 
-    flash(f'Book "{book.title}" was successfully deleted!', 'success')
     return redirect(url_for('home'))
 
 

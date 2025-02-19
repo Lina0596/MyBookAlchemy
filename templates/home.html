@@ -11,32 +11,37 @@
 <body>
     <h1>My Library</h1>
 
-    <form method="GET" action="{{ url_for('home') }}">
-        <label for="sort">Sort by:</label>
-        <select name="sort_by" id="sort" onchange="this.form.submit()">
-            <option value="title" {{ "selected" if sort_by == 'title' else "" }}>Title</option>
-            <option value="author" {{ "selected" if sort_by == 'author' else "" }}>Author</option>
-        </select>
-    </form>
+    <div class="filter">
+        <div class="sort">
+        <form method="GET" action="{{ url_for('home') }}">
+            <label for="sort">Sort by:</label>
+            <select name="sort_by" id="sort" onchange="this.form.submit()">
+                <option value="title" {{ "selected" if sort_by == 'title' else "" }}>Title</option>
+                <option value="author" {{ "selected" if sort_by == 'author' else "" }}>Author</option>
+            </select>
+        </form>
+        </div>
 
-    <form method="GET" action="{{ url_for('home') }}">
-        <label for="search">Search for a book:</label>
-        <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Enter title or author">
-        <button type="submit">Search</button>
-    </form>
-
-    <div class="add">
-        <a href="{{ url_for('add_book') }}">+ add a new book</a>
-        <a href="{{ url_for('add_author') }}">+ add a new author</a>
+        <div class="search">
+            <form method="GET" action="{{ url_for('home') }}">
+                <label for="search">Search for a book:</label>
+                <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Enter title or author">
+                <button type="submit">Search</button>
+            </form>
+        </div>
     </div>
+
+    <a href="{{ url_for('add_book') }}">+ add a new book</a>
+    <a href="{{ url_for('add_author') }}">+ add a new author</a>
+
     {% if books %}
         {% for book in books %}
         <div class="book">
             <img src="{{ book.cover_url }}" alt="Book Cover" width="100">
             <h2>{{ book.title }}</h2>
-            <p>{{ book.isbn }}</p>
-            <p>{{ book.publication_year }}</p>
             <p>{{ book.author.name }}</p>
+            <p>{{ book.publication_year }}</p>
+            <p>ISBN {{ book.isbn }}</p>
             <div class="delete">
                 <form method="GET" action="{{ url_for('delete_book', book_id=book.id) }}">
                     <button type="submit">delete</button>
