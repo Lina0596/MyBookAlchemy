@@ -27,6 +27,12 @@ def get_book_cover(isbn):
 
 @app.route('/', methods=['GET'])
 def home():
+    """
+    Gets all the books and renders the content
+    to the home.html template. Sets the sort function for title
+    as a default. Gets the sort parameter and the search parameter
+    from query.
+    """
     sort_by = request.args.get("sort_by", "title")  # Default sorting by title
     if sort_by == "author":
         books = Book.query.join(Author).order_by(Author.name).all()
@@ -44,6 +50,11 @@ def home():
 
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
+    """
+    Renders the add_author.html template.
+    Gets the name, birthdate and the date of
+    death from post request.
+    """
     if request.method == 'POST':
         author = Author(
             name=request.form["name"],
@@ -62,6 +73,11 @@ def add_author():
 
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
+    """
+    Renders the add_book.html template.
+    Gets the isbn, title, publication year and
+    author from post request.
+    """
     if request.method == 'POST':
         book = Book(
             isbn=request.form["isbn"],
@@ -82,6 +98,11 @@ def add_book():
 
 @app.route('/book/<int:book_id>/delete', methods=['GET'])
 def delete_book(book_id):
+    """
+    Deletes the book with the given book id.
+    If there are no mor books from an author
+    in the library, deletes the author too.
+    """
     book = Book.query.get_or_404(book_id)
     author = book.author
 
@@ -97,10 +118,4 @@ def delete_book(book_id):
 
 
 if __name__ == "__main__":
-    app.run()
-
-
-"""
-with app.app_context():
-  db.create_all()
-"""
+    app.run(host="0.0.0.0", port=5002, debug=True)
