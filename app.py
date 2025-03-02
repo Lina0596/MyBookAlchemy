@@ -65,7 +65,7 @@ def add_author():
         db.session.add(author)
         db.session.commit()
 
-        flash(f"Author '{request.form["name"]}' added successfully to the database", "success")
+        flash(f"Author '{request.form['name']}' added successfully to the database", "success")
         return redirect(url_for("add_author"))
 
     return render_template("add_author.html")
@@ -89,7 +89,7 @@ def add_book():
         db.session.add(book)
         db.session.commit()
 
-        flash(f"Book '{request.form["title"]}' added successfully to the database", "success")
+        flash(f"Book '{request.form['title']}' added successfully to the database", "success")
         return redirect(url_for("add_book"))
 
     authors = Author.query.all()
