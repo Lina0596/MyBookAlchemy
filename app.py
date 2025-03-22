@@ -41,7 +41,7 @@ def home():
 
     search = request.args.get("search")
     if search:
-        books = Book.query.filter(Book.title.like(f"{search}%")).all()
+        books = Book.query.filter(Book.title.like(f"%{search}%")).all()
 
     for book in books:
         book.cover_url = get_book_cover(book.isbn)
