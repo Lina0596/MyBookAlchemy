@@ -11,6 +11,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'dat
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'dd0c02f28da0b1aee669432457e20529'
 db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 
 def get_book_cover(isbn):
@@ -43,8 +45,6 @@ def home():
     if search:
         books = Book.query.filter(Book.title.like(f"%{search}%")).all()
 
-    for book in books:
-        book.cover_url = get_book_cover(book.isbn)
     return render_template("home.html", books=books, sort_by=sort_by, search=search)
 
 
@@ -85,10 +85,13 @@ def add_book():
         if not request.form["isbn"] or not request.form["title"] or not request.form["publication year"] or not request.form["author"]:
             error = "Empty data. Please enter all data."
             return render_template("add_book.html", error=error)
+        book_cover = get_book_cover(request.form["isbn"])
+
         book = Book(
             isbn=request.form["isbn"],
             title=request.form["title"],
             publication_year=int(datetime.strptime(request.form["publication year"], "%Y").year),
+            cover=book_cover,
             author_id=request.form["author"]
         )
 
@@ -125,3 +128,6 @@ def delete_book(book_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5002, debug=True)
+
+"""
+"""

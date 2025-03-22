@@ -28,7 +28,7 @@ class Author(db.Model):
 class Book(db.Model):
     """
     Defines a Book model that includes the properties
-    id, isbn, title, publication_year and author_id as columns
+    id, isbn, title, publication_year, cover and author_id as columns
     """
     __tablename__ = 'books'
 
@@ -36,10 +36,11 @@ class Book(db.Model):
     isbn = db.Column(db.Integer)
     title = db.Column(db.String)
     publication_year = db.Column(db.Integer)
+    cover = db.Column(db.String)
     author_id = db.Column(db.ForeignKey("authors.id"))
 
     def __repr__(self):
         """
         Represents the Book model in a readable way.
         """
-        return f"Book(id = {self.id}, isbn = {self.isbn}, title = {self.title}, publication year = {self.publication_year}, author id = {self.author_id}, book cover = {self.book_cover})"
+        return f"Book(id = {self.id}, isbn = {self.isbn}, title = {self.title}, publication year = {self.publication_year}, cover = {self.cover}, author id = {self.author_id}, book cover = {self.book_cover})"

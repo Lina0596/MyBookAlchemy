@@ -37,7 +37,9 @@
     {% if books %}
         {% for book in books %}
         <div class="book">
-            <img src="{{ book.cover_url }}" alt="Book Cover" width="100">
+            {% if book.cover %}
+                <img src="{{ book.cover }}" alt="Book Cover" width="100">
+            {% endif %}
             <h2>{{ book.title }}</h2>
             <p>{{ book.author.name }}</p>
             <p>{{ book.publication_year }}</p>
