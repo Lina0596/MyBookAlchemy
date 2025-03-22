@@ -11,8 +11,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'dat
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'dd0c02f28da0b1aee669432457e20529'
 db.init_app(app)
-with app.app_context():
-    db.create_all()
 
 
 def get_book_cover(isbn):
@@ -85,8 +83,11 @@ def add_book():
         if not request.form["isbn"] or not request.form["title"] or not request.form["publication year"] or not request.form["author"]:
             error = "Empty data. Please enter all data."
             return render_template("add_book.html", error=error)
+        isbn_exists = Book.query.filter_by(isbn=request.form["isbn"]).first()
+        if isbn_exists:
+            error = "Book with this isbn already exists."
+            return render_template("add_book.html", error=error)
         book_cover = get_book_cover(request.form["isbn"])
-
         book = Book(
             isbn=request.form["isbn"],
             title=request.form["title"],
@@ -109,7 +110,7 @@ def add_book():
 def delete_book(book_id):
     """
     Deletes the book with the given book id.
-    If there are no mor books from an author
+    If there are no more books from an author
     in the library, deletes the author too.
     """
     book = Book.query.get_or_404(book_id)
@@ -128,6 +129,3 @@ def delete_book(book_id):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5002, debug=True)
-
-"""
-"""
