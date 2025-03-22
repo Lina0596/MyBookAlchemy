@@ -14,6 +14,10 @@ body {
     margin-top: 20px;
 }
 
+.error {
+    color: red;
+}
+
 .filter {
     display: flex;
     background-color: #FFF;

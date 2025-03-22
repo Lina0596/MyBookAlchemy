@@ -56,6 +56,9 @@ def add_author():
     death from post request.
     """
     if request.method == 'POST':
+        if not request.form["name"] or not request.form["birthdate"]:
+            error = "Empty data. Please enter all data."
+            return render_template("add_author.html", error=error)
         author = Author(
             name=request.form["name"],
             birth_date=datetime.strptime(request.form["birthdate"], "%Y-%m-%d").date(),
@@ -79,6 +82,9 @@ def add_book():
     author from post request.
     """
     if request.method == 'POST':
+        if not request.form["isbn"] or not request.form["title"] or not request.form["publication year"] or not request.form["author"]:
+            error = "Empty data. Please enter all data."
+            return render_template("add_book.html", error=error)
         book = Book(
             isbn=request.form["isbn"],
             title=request.form["title"],
