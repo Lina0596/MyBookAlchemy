@@ -58,7 +58,7 @@ def add_author():
             error = "Empty data. Please enter all data."
             return render_template("add_author.html", error=error)
         author = Author(
-            name=request.form["name"],
+            name=request.form["name"].strip(),
             birth_date=datetime.strptime(request.form["birthdate"], "%Y-%m-%d").date(),
             date_of_death=datetime.strptime(request.form["date of death"], "%Y-%m-%d").date() if request.form["date of death"] else None,
         )
@@ -89,9 +89,9 @@ def add_book():
             return render_template("add_book.html", error=error)
         book_cover = get_book_cover(request.form["isbn"])
         book = Book(
-            isbn=request.form["isbn"],
-            title=request.form["title"],
-            publication_year=int(datetime.strptime(request.form["publication year"], "%Y").year),
+            isbn=request.form["isbn"].strip(),
+            title=request.form["title"].strip(),
+            publication_year=int(datetime.strptime(request.form["publication year"].strip(), "%Y").year),
             cover=book_cover,
             author_id=request.form["author"]
         )
